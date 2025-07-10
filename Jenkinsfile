@@ -1,21 +1,23 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.11-slim'
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // if you need docker inside docker
-        }
+  agent any
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git 'https://github.com/nehru/mdemo'
+      }
     }
 
-    stages {
-        stage('Install Dependencies') {
-            steps {
-                sh 'pip install -r requirements.txt'
-            }
-        }
-        stage('Run Analyzer') {
-            steps {
-                sh 'python js_analyzer.py sample.js'
-            }
-        }
+    stage('Run Analyzer in Docker') {
+      steps {
+        sh '''
+          docker run --rm \
+          -v $PWD:/app \
+          -w /app \
+          python:3.11-slim \
+          bash -c "pip install -r requirements.txt && python js_analyzer.py sample.js"
+        '''
+      }
     }
+  }
 }
