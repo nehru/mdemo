@@ -10,7 +10,7 @@ function calculateSum(a, b) {
 
   // This is a common pattern that eslint-plugin-security might flag (e.g., security/detect-eval-with-expression)
   // if rules are strict enough and 'eval' is used with untrusted input (though here it's static)
-  eval("console.log('Result is: ' + result);");
+  //eval("console.log('Result is: ' + result);");
 
   return result;
 }
